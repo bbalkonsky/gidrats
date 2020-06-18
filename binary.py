@@ -30,17 +30,18 @@ encoder.fit(Y)
 encoded_Y = encoder.transform(Y)
 
 
-classifier = Sequential()
-classifier.add(Dense(40, activation='relu', kernel_initializer='random_normal', input_dim=len(prediction_var)))
-classifier.add(Dense(20, activation='relu', kernel_initializer='random_normal'))
-classifier.add(Dense(1, activation='sigmoid', kernel_initializer='random_normal'))
+model = Sequential()
+model.add(Dense(40, activation='relu', kernel_initializer='random_normal', input_dim=len(prediction_var)))
+model.add(Dense(20, activation='relu', kernel_initializer='random_normal'))
+model.add(Dense(1, activation='sigmoid', kernel_initializer='random_normal'))
 
 #Compiling the neural network
-classifier.compile(optimizer ='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer ='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 #Fitting the data to the training dataset
-classifier.fit(X, Y, batch_size=10, epochs=50)
+model.fit(X, Y, batch_size=10, epochs=50)
 
-eval_model=classifier.evaluate(X, encoded_Y)
+eval_model = model.evaluate(X, encoded_Y)
 print(eval_model)
-classifier.save('outputs/model_bin.h5')
+model.save('outputs/model'
+                '.h5')
