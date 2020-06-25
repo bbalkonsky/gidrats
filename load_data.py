@@ -44,7 +44,14 @@ df['history_temp'] = .0001
 
 df['drop_for_train'] = 0
 
-# df['label'] = .0  # for test
+#df['label'] = .0
+df['label1'] = .0
+df['label2'] = .0
+df['label3'] = .0
+df['label4'] = .0
+df['label5'] = .0
+df['label6'] = .0
+df['label7'] = .0
 
 User_C = 100
 User_C1_v = 10
@@ -198,21 +205,28 @@ for idx, row in tqdm(df.iterrows(), total=df.shape[0]):  # progress bar
                 df.at[idx, 'history_temp'] = normalization(np.mean(t_izm_sum))
 
             # ------------ label -------------
-            # water hot = 0
-            # if (df.at[idx, 'C2_v_P_tr'] > 0) and (df.at[idx, 'C2_v_P_zatr'] < 0) and (df.at[idx, 'C2_v_T_izm'] > 0) and (df.at[idx, 'T_izm'] > 0):
-            # df.at[idx, 'label'] = 0
-
-            # zone rick of gidrate = 0.8
-            # elif (df.at[idx, 'T_izm'] < 0):
-            # df.at[idx, 'label'] = 0.8
-
-            # gidrate = 1
-            # elif (df.at[idx, 'C2_v_P_tr'] < 0) and (df.at[idx, 'C2_v_P_zatr'] > 0) and (df.at[idx, 'C2_v_T_izm'] < 0) and (df.at[idx, 'RSI_function_tr'] < 0) and (df.at[idx, 'RSI_function_zatr'] > 0) and (df.at[idx, 'RSI_function_temp'] < 0):
-            # df.at[idx, 'label'] = 1
-
-            # other
-            # else:
-            # df.at[idx, 'label'] = 0
+            
+            if (df.at[idx, 'C1_v_P_tr'] < 0) and (df.at[idx, 'C1_v_P_zatr'] > 0) and (df.at[idx, 'C1_v_T_izm'] < 0):
+                df.at[idx, 'label1'] = 1
+            
+            if (df.at[idx, 'C2_v_P_tr'] < 0) and (df.at[idx, 'C2_v_P_zatr'] > 0) and (df.at[idx, 'C2_v_T_izm'] < 0):
+                df.at[idx, 'label2'] = 1
+            
+            if (df.at[idx, 'C1_a_P_tr'] < 0) and (df.at[idx, 'C1_a_P_zatr'] > 0) and (df.at[idx, 'C1_a_T_izm'] < 0):
+                df.at[idx, 'label3'] = 1
+            
+            if (df.at[idx, 'C2_a_P_tr'] < 0) and (df.at[idx, 'C2_a_P_zatr'] > 0) and (df.at[idx, 'C2_a_T_izm'] < 0):
+                df.at[idx, 'label4'] = 1
+                
+            if (df.at[idx, 'RSI_function_tr'] == -1) and (df.at[idx, 'RSI_function_zatr'] == 1) and (df.at[idx, 'RSI_function_temp'] == -1):
+                df.at[idx, 'label5'] = 1
+                
+            if (df.at[idx, 'history_tr'] < 0) and (df.at[idx, 'history_zatr'] > 0) and (df.at[idx, 'history_temp'] < 0):
+                df.at[idx, 'label6'] = 1
+                
+            if (df.at[idx, 'R_P_tr'] > 0) and (df.at[idx, 'R_P_zatr'] < 0) and (df.at[idx, 'R_T_izm'] > 0):
+                df.at[idx, 'label7'] = 1
+                
         else:
             df.at[idx, 'drop_for_train'] = 1
     else:
