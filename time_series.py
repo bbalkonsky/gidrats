@@ -9,7 +9,7 @@ features_considered = ['label', 'P_tr', 'P_zatr', 'T_izm', 'v_P_tr', 'v_P_zatr',
                        'RSI_function_tr', 'RSI_function_zatr', 'RSI_function_temp']
 
 TRAIN_SPLIT = 30000
-BATCH_SIZE = 500
+BATCH_SIZE = 128
 BUFFER_SIZE = 10000
 EVALUATION_INTERVAL = 1000
 EPOCHS = 10
@@ -46,8 +46,8 @@ def multivariate_data(dataset, target, start_index, end_index, history_size,
   return np.array(data), np.array(labels)
 
 past_history = 200
-future_target = 72
-STEP = 6
+future_target = 2
+STEP = 1
 
 x_train_single, y_train_single = multivariate_data(dataset, dataset[:, 0], 0,
                                                    TRAIN_SPLIT, past_history,
@@ -64,7 +64,6 @@ train_data_single = train_data_single.cache().shuffle(BUFFER_SIZE).batch(BATCH_S
 val_data_single = tf.data.Dataset.from_tensor_slices((x_val_single, y_val_single))
 val_data_single = val_data_single.batch(BATCH_SIZE).repeat()
 
-
 single_step_model = tf.keras.models.Sequential()
 single_step_model.add(tf.keras.layers.LSTM(32,
                                            input_shape=x_train_single.shape[-2:]))
@@ -76,9 +75,9 @@ for x, y in val_data_single.take(1):
   print(single_step_model.predict(x).shape)
 
 single_step_history = single_step_model.fit(train_data_single, epochs=EPOCHS,
-                                            steps_per_epoch=EVALUATION_INTERVAL,
+                                            steps_per_epoch=30000,
                                             validation_data=val_data_single,
-                                            validation_steps=50)
+                                            validation_steps=50, use_multiprocessing=True, workers=8)
 
 def plot_train_history(history, title):
   loss = history.history['loss']
@@ -123,7 +122,7 @@ def show_plot(plot_data, delta, title):
   plt.xlabel('Time-Step')
   return plt
 
-for x, y in val_data_single.take(7):
+for x, y in val_data_single.take(3):
   plot = show_plot([x[0][:, 0].numpy(), y[0].numpy(),
                     single_step_model.predict(x)[0]], 0,
                    'Single Step Prediction')
