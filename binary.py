@@ -43,5 +43,4 @@ model.fit(X, Y, batch_size=10, epochs=50)
 
 eval_model = model.evaluate(X, encoded_Y)
 print(eval_model)
-model.save('outputs/model'
-                '.h5')
+model.save('outputs/model.h5')
